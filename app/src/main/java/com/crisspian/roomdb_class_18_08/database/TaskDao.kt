@@ -1,5 +1,6 @@
 package com.crisspian.roomdb_class_18_08.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.crisspian.roomdb_class_18_08.model.Task
 
@@ -7,7 +8,7 @@ import com.crisspian.roomdb_class_18_08.model.Task
 interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTask(task: Task)
+    suspend fun insertTask(task: Task)
 
     @Insert
     fun insertMultipleTask(list: List<Task>)
@@ -19,7 +20,7 @@ interface TaskDao {
     fun deleteOneTask(task: Task)
 
     @Query("SELECT * FROM task_table ORDER BY idTask ASC")
-    fun getAllTask():List<Task>
+    fun getAllTask(): LiveData<List<Task>>
 
 
 }

@@ -1,12 +1,15 @@
 package com.crisspian.roomdb_class_18_08.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.crisspian.roomdb_class_18_08.R
 import com.crisspian.roomdb_class_18_08.model.Task
@@ -26,6 +29,9 @@ class FirstFragment : Fragment(), IView {
     ): View? {
         // Inflate the layout for this fragment
         presenter = TaskPresenter(requireActivity().application,this)
+        var task = Task(0,"Esta es una nota Nueva Nueva nueva", "19/08/2020", "20/08/2020")
+        presenter.insertTask(task)
+        presenter.getAllTasks()
 
 
         return inflater.inflate(R.layout.fragment_first, container, false)
@@ -39,11 +45,13 @@ class FirstFragment : Fragment(), IView {
         }
     }
 
-    override fun showAllTask(list: List<Task>) {
-        TODO("Not yet implemented")
+    override fun showAllTask(list: LiveData<List<Task>>) {
+       list.observe(this, Observer {
+           Log.d("TAG", it.toString())
+       })
     }
 
     override fun showToastMessage(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
