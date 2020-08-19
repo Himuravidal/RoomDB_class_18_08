@@ -21,4 +21,5 @@ interface TaskDao {
     @Query("SELECT * FROM task_table ORDER BY idTask ASC")
     fun getAllTask():List<Task>
 
+
 }
