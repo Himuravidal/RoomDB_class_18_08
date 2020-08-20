@@ -6,18 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import com.crisspian.roomdb_class_18_08.database.TaskDataBase
 import com.crisspian.roomdb_class_18_08.model.Task
 import com.crisspian.roomdb_class_18_08.model.TaskRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class TaskPresenter(application: Application, private val iView: IView): IPresenter , CoroutineScope {
+class TaskPresenter(application: Application, private val iView: IView): IPresenter {
     private val mRepository: TaskRepository
     private val allLiveDataTask : LiveData<List<Task>>
 
-    private val job = Job()
-    override val coroutineContext: CoroutineContext = job + Dispatchers.IO
+    //private val job = Job()
+    private val job = SupervisorJob()
+    private val coroutineScope = CoroutineScope(Dispatchers.IO + job)
 
     init {
         val taskDao = TaskDataBase.getDatabase(application).getTaskDao()
@@ -25,12 +23,12 @@ class TaskPresenter(application: Application, private val iView: IView): IPresen
         allLiveDataTask = mRepository.mAllTasks
     }
 
-    override fun insertTask(task: Task) {
+    override fun insertTask(task: Task)  {
             inserTest(task)
             iView.showToastMessage("Guardando")
     }
 
-    fun inserTest(task: Task) = launch {
+    fun inserTest(task: Task) = coroutineScope.launch {
         mRepository.insertTask(task)
     }
 
